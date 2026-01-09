@@ -3,14 +3,16 @@ from groq import Groq
 import uuid
 
 # --- Configuration ---
-# REPLACE THIS WITH YOUR ACTUAL API KEY
-# Automatic lookup in secrets.toml
-client = Groq(api_key=st.secrets["GROQ_API_KEY"])
 MODEL_ID = "meta-llama/llama-4-scout-17b-16e-instruct"
 
-# --- Initialize Client ---
 try:
-    client = Groq(api_key=GROQ_API_KEY)
+    if "GROQ_API_KEY" in st.secrets:
+        api_key = st.secrets["GROQ_API_KEY"]
+    else:
+        st.error("GROQ_API_KEY not found in secrets.toml")
+        st.stop()
+        
+    client = Groq(api_key=api_key)
 except Exception as e:
     st.error(f"Error initializing Groq client: {e}")
     st.stop()
